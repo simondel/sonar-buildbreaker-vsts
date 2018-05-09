@@ -1,0 +1,23 @@
+{
+  "name": "sonar-buildbreaker-vsts",
+  "version": "1.0.0",
+  "description": "These tasks help automate bumping version numbers and changing package names at build time.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "pack": "tfx extension create --manifest-globs vss-extension.json"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/simondel/sonar-buildbreaker-vsts.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/simondel/sonar-buildbreaker-vsts/issues"
+  },
+  "homepage": "https://github.com/simondel/sonar-buildbreaker-vsts#readme",
+  "devDependencies": {
+    "tfx-cli": "^0.5.10"
+  }
+}
