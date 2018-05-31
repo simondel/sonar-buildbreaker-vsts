@@ -5,16 +5,31 @@ import * as request from 'request';
 
 async function run() {
   getTaskReport().then(report => {
-    request(`${report.serverUrl}/api/ce/task?id=${report.ceTaskId}`, (error, response, body) => {
-      request(`${report.serverUrl}/api/qualitygates/project_status?analysisId=${JSON.parse(body).task.analysisId}`, (error, response, body) => {
-        const projectStatus = JSON.parse(body).projectStatus;
-        if (projectStatus.status === 'ERROR') {
-          tl.setResult(tl.TaskResult.Failed, `The quality gate has failed with status: ${projectStatus.status}`);
-        } else {
-          console.log(`The quality gate passed with status: ${projectStatus.status}`)
-        }
+    const endpointData: EndpointData = JSON.parse(tl.getVariable('SONARQUBE_ENDPOINT')).data;
+    request.get(
+      {
+        method: 'GET',
+        baseUrl: report.serverUrl,
+        uri: `/api/ce/task?id=${report.ceTaskId}`,
+        json: true,
+        auth: endpointData.auth
+      }, (error, response, body) => {
+        request.get(
+          {
+            method: 'GET',
+            baseUrl: report.serverUrl,
+            uri: `/api/qualitygates/project_status?analysisId=${body.task.analysisId}`,
+            json: true,
+            auth: endpointData.auth
+          }, (error, response, body) => {
+            const projectStatus = body.projectStatus;
+            if (projectStatus.status === 'ERROR') {
+              tl.setResult(tl.TaskResult.Failed, `The quality gate has failed with status: ${projectStatus.status}`);
+            } else {
+              console.log(`The quality gate passed with status: ${projectStatus.status}`)
+            }
+          });
       });
-    });
   });
 }
 
@@ -53,5 +68,17 @@ interface TaskResult {
   projectKey: string,
   serverUrl: string,
 };
-
+class EndpointData {
+  url: string;
+  token?: string;
+  username?: string;
+  password?: string;
+  organization?: string;
+  get auth() {
+    if (!this.token && this.password) {
+      return { user: this.username, pass: this.password };
+    }
+    return { user: this.token || this.username };
+  };
+}
 run();
