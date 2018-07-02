@@ -13,9 +13,5 @@
     "fs-extra": "5.0.0",
     "request": "^2.87.0",
     "vsts-task-lib": "2.4.0"
-  },
-  "devDependencies": {
-    "@types/node": "^10.0.6",
-    "typescript": "^2.8.3"
   }
 }

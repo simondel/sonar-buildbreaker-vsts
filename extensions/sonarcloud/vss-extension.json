@@ -1,8 +1,8 @@
 {
     "manifestVersion": 1,
-    "id": "sonar-buildbreaker",
-    "name": "SonarQube build breaker",
-    "version": "6.2.3",
+    "id": "sonarcloud-buildbreaker",
+    "name": "SonarCloud build breaker",
+    "version": "1.0.3",
     "publisher": "SimondeLang",
     "public" : true,
     "repository": {
@@ -14,22 +14,22 @@
             "id": "Microsoft.VisualStudio.Services"
         }
     ],    
-    "description": "Task for breaking your build when it fails the SonarQube quality gate.",
+    "description": "Task for breaking your build when it fails the SonarCloud quality gate.",
     "categories": [
         "Build and release"
     ],
     "content": {
         "details": {
-            "path": "README.md"
+            "path": "extensions/sonarcloud/README.md"
         },
         "license": {
-            "path": "LICENSE"
+            "path": "extensions/sonarcloud/LICENSE"
         }
     },
     "tags": [
         "build",
         "sonar",
-        "sonarqube", "sq"
+        "sonarcloud"
     ],
     "links": {
         "repository": {
@@ -48,7 +48,7 @@
     },
     "files": [
         {
-            "path": "tasks/SonarBuildBreaker"
+            "path": "tasks/buildbreaker"
         }
     ],
     "contributions": [
@@ -59,7 +59,7 @@
                 "ms.vss-distributed-task.tasks"
             ],
             "properties": {
-                "name": "tasks/SonarBuildbreaker"
+                "name": "extensions/sonarcloud/tasks/buildbreaker"
             }
         }
     ]

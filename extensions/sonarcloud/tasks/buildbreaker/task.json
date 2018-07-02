@@ -1,7 +1,7 @@
 {
-    "id": "6eaeb60a-450c-4c55-b8f7-ac6dce9a4d15",
-    "name": "sonar-buildbreaker",
-    "friendlyName": "SonarQube build breaker",
+    "id": "6eaeb60a-450c-4c55-b8f7-ac6dce9a4d16",
+    "name": "sonarcloud-buildbreaker",
+    "friendlyName": "SonarCloud build breaker",
     "description": "Break the build when the quality gate fails.",
     "helpMarkDown": "",
     "category": "Utility",
@@ -9,10 +9,10 @@
     "visibility": [
         "Build",
         "Release"
-      ],
+    ],
     "version": {
-        "Major": 6,
-        "Minor": 2,
+        "Major": 1,
+        "Minor": 0,
         "Patch": 3
     },
     "instanceNameFormat": "Break build on quality gate failure",
@@ -23,7 +23,15 @@
             "isExpanded": false
         }
     ],
-    "inputs": [],
+    "inputs": [
+        {
+            "name": "SonarCloud",
+            "type": "connectedService:sonarcloud",
+            "label": "SonarCloud Service Endpoint",
+            "required": true,
+            "helpMarkDown": "Select the SonarCloud endpoint for your project. To create one, click the Manage link and create a new SonarCloud Service Endpoint, then enter your SonarCloud account token."
+        }
+    ],
     "execution": {
         "Node": {
             "target": "dist/task.js",
