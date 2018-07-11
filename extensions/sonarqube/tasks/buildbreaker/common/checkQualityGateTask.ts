@@ -79,6 +79,10 @@ async function getTaskReport(): Promise<TaskResult> {
 };
 
 function handleErrors(error: any, response: request.Response) {
+  if (!response) {
+    tl.setResult(tl.TaskResult.Failed, `Unable to get a result! It has value ${response} and a possible error is ${error}`);
+  }
+
   if (response.statusCode < 200 || response.statusCode >= 300) {
     tl.setResult(tl.TaskResult.Failed, `Something went wrong! Got statuscode ${response.statusCode} and error ${error}`);
   }
