@@ -2,7 +2,7 @@
     "manifestVersion": 1,
     "id": "sonarcloud-buildbreaker",
     "name": "SonarCloud build breaker",
-    "version": "1.0.3",
+    "version": "1.0.5",
     "publisher": "SimondeLang",
     "public" : true,
     "repository": {

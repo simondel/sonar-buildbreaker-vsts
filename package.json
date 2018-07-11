@@ -20,6 +20,7 @@
   "homepage": "https://github.com/simondel/sonar-buildbreaker-vsts#readme",
   "devDependencies": {
     "@types/node": "^10.0.6",
+    "@types/request": "^2.47.1",
     "tfx-cli": "^0.5.10",
     "typescript": "^2.8.3"
   }

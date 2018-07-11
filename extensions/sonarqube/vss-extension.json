@@ -2,7 +2,7 @@
     "manifestVersion": 1,
     "id": "sonar-buildbreaker",
     "name": "SonarQube build breaker",
-    "version": "7.0.2",
+    "version": "7.0.3",
     "publisher": "SimondeLang",
     "public" : true,
     "repository": {
