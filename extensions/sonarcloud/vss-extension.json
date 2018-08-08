@@ -2,9 +2,9 @@
     "manifestVersion": 1,
     "id": "sonarcloud-buildbreaker",
     "name": "SonarCloud build breaker",
-    "version": "1.0.6",
+    "version": "1.0.11",
     "publisher": "SimondeLang",
-    "public" : true,
+    "public": true,
     "repository": {
         "type": "git",
         "uri": "https://github.com/simondel/sonar-buildbreaker-vsts"
@@ -13,7 +13,7 @@
         {
             "id": "Microsoft.VisualStudio.Services"
         }
-    ],    
+    ],
     "description": "Task for breaking your build when it fails the SonarCloud quality gate.",
     "categories": [
         "Build and release"
@@ -44,11 +44,15 @@
         "theme": "light"
     },
     "icons": {
-        "default": "images/extension-icon.png"        
+        "default": "images/extension-icon.png"
     },
     "files": [
         {
             "path": "tasks/buildbreaker"
+        },
+        {
+            "path": "images",
+            "addressable": true
         }
     ],
     "contributions": [

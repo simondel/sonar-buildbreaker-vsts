@@ -2,9 +2,9 @@
     "manifestVersion": 1,
     "id": "sonar-buildbreaker",
     "name": "SonarQube build breaker",
-    "version": "7.0.4",
+    "version": "7.0.7",
     "publisher": "SimondeLang",
-    "public" : true,
+    "public": true,
     "repository": {
         "type": "git",
         "uri": "https://github.com/simondel/sonar-buildbreaker-vsts"
@@ -13,7 +13,7 @@
         {
             "id": "Microsoft.VisualStudio.Services"
         }
-    ],    
+    ],
     "description": "Task for breaking your build when it fails the SonarQube quality gate.",
     "categories": [
         "Build and release"
@@ -29,7 +29,8 @@
     "tags": [
         "build",
         "sonar",
-        "sonarqube", "sq"
+        "sonarqube",
+        "sq"
     ],
     "links": {
         "repository": {
@@ -44,11 +45,15 @@
         "theme": "light"
     },
     "icons": {
-        "default": "images/extension-icon.png"        
+        "default": "images/extension-icon.png"
     },
     "files": [
         {
             "path": "tasks/buildbreaker"
+        },
+        {
+            "path": "images",
+            "addressable": true
         }
     ],
     "contributions": [
