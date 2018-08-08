@@ -1,5 +1,8 @@
-## SonarQube build breaker
-An extension that breaks your build whenever the quality gate in SonarQube failed. This plugin works with SonarQube extension for VSTS 4.x and SonarQube 6.x
+## Sonar build breaker
+An extension that breaks your build whenever the quality gate in SonarQube/SonarCloud failed. 
 
-### SonarCloud
-This extension currently does not work with SonarCloud. Do you want support for SonarCloud? Please take a look at https://github.com/simondel/sonar-buildbreaker-vsts/issues/1
+### Marketplace
+There are two extensions available on the marketplace, the (SonarCloud build breaker)[https://marketplace.visualstudio.com/items?itemName=SimondeLang.sonarcloud-buildbreaker] and the (SonarQube build breaker)[https://marketplace.visualstudio.com/items?itemName=SimondeLang.sonar-buildbreaker]
+
+### Support
+Need help with the extension or do you have feedback? Feel free to open an issue on this GitHub repository.
