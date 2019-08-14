@@ -51,7 +51,7 @@ export default async function checkQualityGateTask(endpoint: Endpoint) {
 
 async function getTaskReport(): Promise<TaskResult> {
   return new Promise<TaskResult>(resolve => {
-    const taskReportGlob = path.join(tl.getVariable('Build.BuildNumber'), 'report-task.txt');
+    const taskReportGlob = path.join('**', 'report-task.txt');
     const taskReportGlobResult = tl.findMatch(
         tl.getVariable('Agent.TempDirectory'),
         taskReportGlob
