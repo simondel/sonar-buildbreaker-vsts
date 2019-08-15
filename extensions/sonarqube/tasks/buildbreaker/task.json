@@ -13,7 +13,7 @@
     "version": {
         "Major": 7,
         "Minor": 0,
-        "Patch": 4
+        "Patch": 5
     },
     "instanceNameFormat": "Break build on quality gate failure",
     "groups": [

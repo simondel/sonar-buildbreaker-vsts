@@ -50,10 +50,18 @@ export default async function checkQualityGateTask(endpoint: Endpoint) {
 };
 
 async function getTaskReport(): Promise<TaskResult> {
+  const REPORT_TASK_NAME = 'report-task.txt';
+  const SONAR_TEMP_DIRECTORY_NAME = 'sonar';
+
   return new Promise<TaskResult>(resolve => {
-    const taskReportGlob = path.join('**', 'report-task.txt');
+    const taskReportGlob = path.join(
+      SONAR_TEMP_DIRECTORY_NAME,
+      tl.getVariable('Build.BuildNumber'),
+      '**',
+      REPORT_TASK_NAME
+    );
     const taskReportGlobResult = tl.findMatch(
-      tl.getVariable('Agent.BuildDirectory'),
+      tl.getVariable('Agent.TempDirectory'),
       taskReportGlob
     );
     console.log(`Getting task report from file ${taskReportGlobResult[0]}`);
