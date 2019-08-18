@@ -1,6 +1,6 @@
-import * as tl from 'vsts-task-lib/task';
-import Endpoint, { EndpointType } from './common/Endpoint';
+import * as tl from 'azure-pipelines-task-lib/task';
 import checkQualityGateTask from './common/checkQualityGateTask';
+import Endpoint, { EndpointType } from './common/sonarsource/sonarqube/Endpoint';
 
 async function run() {
   try {

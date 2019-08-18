@@ -1,97 +1,67 @@
-import * as tl from 'vsts-task-lib/task';
-import * as path from 'path';
-import * as fs from 'fs-extra';
-import * as request from 'request';
-import TaskResult from './TaskResult';
-import Endpoint from './Endpoint';
+import * as tl from 'azure-pipelines-task-lib/task';
+import Endpoint from './sonarsource/sonarqube/Endpoint';
+import TaskReport from './sonarsource/sonarqube/TaskReport';
+import Metrics from './sonarsource/sonarqube/Metrics';
+import Task, { TimeOutReachedError } from './sonarsource/sonarqube/Task';
+import Analysis from './sonarsource/sonarqube/Analysis';
+
+let globalQualityGateStatus = '';
 
 export default async function checkQualityGateTask(endpoint: Endpoint) {
-  return new Promise<void>(resolve => {
-    getTaskReport().then(report => {
-      console.log(`Retrieving analysisId from ${report.serverUrl}/api/ce/task?id=${report.ceTaskId}`);
-      request.get(
-        {
-          method: 'GET',
-          baseUrl: report.serverUrl,
-          uri: `/api/ce/task?id=${report.ceTaskId}`,
-          json: true,
-          auth: endpoint.auth,
+  const metrics = await Metrics.getAllMetrics(endpoint);
 
-        }, (error, response, body) => {
-          handleErrors(error, response);
-          if (!body.task || !body.task.analysisId) {
-            tl.setResult(tl.TaskResult.Failed, `Unknown result from previous http request. The body is: ${body}. Statuscode is ${response.statusCode}`);
-          }
-          console.log(`Retrieving quality gate report from ${report.serverUrl}/api/qualitygates/project_status?analysisId=${body.task.analysisId}`);
-          request.get(
-            {
-              method: 'GET',
-              baseUrl: report.serverUrl,
-              uri: `/api/qualitygates/project_status?analysisId=${body.task.analysisId}`,
-              json: true,
-              auth: endpoint.auth
-            }, (error, response, body) => {
-              handleErrors(error, response);
-              if (!body.projectStatus || !body.projectStatus.status) {
-                tl.setResult(tl.TaskResult.Failed, `Unknown result from previous http request. The body is: ${body}. Statuscode is ${response.statusCode}`);
-              }
-              const projectStatus = body.projectStatus;
-              console.log(`The quality gate retrieved. The status of the quality gate is ${projectStatus.status}`);
-              if (projectStatus.status === 'ERROR') {
-                tl.setResult(tl.TaskResult.Failed, `The analysis did not pass the quality gate because it has the status: ${projectStatus.status}. Attempting to fail the build!`);
-              } else {
-                console.log(`The analysis has passed the quality gate: ${projectStatus.status}`);
-              }
-              resolve();
-            });
-        });
-    });
-  });
-};
+  const timeoutSec = 120;
+  const taskReports = await TaskReport.createTaskReportsFromFiles();
 
-async function getTaskReport(): Promise<TaskResult> {
-  const REPORT_TASK_NAME = 'report-task.txt';
-  const SONAR_TEMP_DIRECTORY_NAME = 'sonar';
+  const analyses = await Promise.all(
+    taskReports.map(taskReport => getReportForTask(taskReport, metrics, endpoint, timeoutSec))
+  );
 
-  return new Promise<TaskResult>(resolve => {
-    const taskReportGlob = path.join(
-      SONAR_TEMP_DIRECTORY_NAME,
-      tl.getVariable('Build.BuildNumber'),
-      '**',
-      REPORT_TASK_NAME
-    );
-    const taskReportGlobResult = tl.findMatch(
-      tl.getVariable('Agent.TempDirectory'),
-      taskReportGlob
-    );
-    console.log(`Getting task report from file ${taskReportGlobResult[0]}`);
-    fs.readFile(taskReportGlobResult[0], 'UTF-8').then(fileContent => {
-      const lines: string[] = fileContent.replace(/\r\n/g, '\n').split('\n'); // proofs against xplat line-ending issues
-      const settings = new Map<string, string>();
-      lines.forEach((line: string) => {
-        const splitLine = line.split('=');
-        if (splitLine.length > 1) {
-          settings.set(splitLine[0], splitLine.slice(1, splitLine.length).join());
-        }
-      });
+  console.log(`Number of analyses in this build: ${taskReports.length}`);
+  console.log(`Summary of statusses: ${analyses.map(a => `"${a.status}"`).join(', ')}`);
 
-      resolve({
-        ceTaskId: settings.get('ceTaskId'),
-        ceTaskUrl: settings.get('ceTaskUrl'),
-        dashboardUrl: settings.get('dashboardUrl'),
-        projectKey: settings.get('projectKey'),
-        serverUrl: settings.get('serverUrl')
-      });
-    });
-  });
-};
-
-function handleErrors(error: any, response: request.Response) {
-  if (!response) {
-    tl.setResult(tl.TaskResult.Failed, `Unable to get a result! It has value ${response} and a possible error is ${error}`);
+  if(analyses.some(a => a.status === 'ERROR')) {
+    tl.setResult(tl.TaskResult.Failed, `The analysis did not pass the quality gate because because at least one analysis has has the status 'ERROR'. Attempting to fail the build!`);
   }
+};
 
-  if (response.statusCode < 200 || response.statusCode >= 300) {
-    tl.setResult(tl.TaskResult.Failed, `Something went wrong! Got statuscode ${response.statusCode} and error ${error}`);
+/**
+ * Custom, returns Analysis instead of a string
+ * @param taskReport 
+ * @param metrics 
+ * @param endpoint 
+ * @param timeoutSec 
+ */
+export async function getReportForTask(
+  taskReport: TaskReport,
+  metrics: Metrics,
+  endpoint: Endpoint,
+  timeoutSec: number
+): Promise<Analysis> {
+  try {
+    const task = await Task.waitForTaskCompletion(endpoint, taskReport.ceTaskId, timeoutSec);
+    const analysis = await Analysis.getAnalysis({
+      analysisId: task.analysisId,
+      dashboardUrl: taskReport.dashboardUrl,
+      endpoint,
+      metrics,
+      projectName: task.componentName
+    });
+
+    if (analysis.status === 'ERROR' || analysis.status === 'WARN' || analysis.status === 'NONE') {
+      globalQualityGateStatus = 'failed';
+    }
+
+    return analysis;
+  } catch (e) {
+    if (e instanceof TimeOutReachedError) {
+      tl.warning(
+        `Task '${
+          taskReport.ceTaskId
+        }' takes too long to complete. Stopping after ${timeoutSec}s of polling. No quality gate will be displayed on build result.`
+      );
+    } else {
+      throw e;
+    }
   }
 }

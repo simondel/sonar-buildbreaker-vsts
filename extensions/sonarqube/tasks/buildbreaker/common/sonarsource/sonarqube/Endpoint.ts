@@ -1,4 +1,5 @@
-import * as tl from 'vsts-task-lib/task';
+import * as tl from 'azure-pipelines-task-lib/task';
+import { PROP_NAMES } from '../helpers/utils';
 
 export enum EndpointType {
   SonarCloud = 'SonarCloud',
@@ -35,6 +36,15 @@ export default class Endpoint {
     return JSON.stringify({ type: this.type, data: this.data });
   }
 
+  public toSonarProps() {
+    return {
+      [PROP_NAMES.HOST_URL]: this.data.url,
+      [PROP_NAMES.LOGIN]: this.data.token || this.data.username,
+      [PROP_NAMES.PASSSWORD]: this.data.password,
+      [PROP_NAMES.ORG]: this.data.organization
+    };
+  }
+
   public static getEndpoint(id: string, type: EndpointType): Endpoint {
     const url = tl.getEndpointUrl(id, false);
     const token = tl.getEndpointAuthorizationParameter(
@@ -44,8 +54,7 @@ export default class Endpoint {
     );
     const username = tl.getEndpointAuthorizationParameter(id, 'username', true);
     const password = tl.getEndpointAuthorizationParameter(id, 'password', true);
-    // const organization = tl.getInput('organization', type === EndpointType.SonarCloud);
-    const organization = "";
+    const organization = tl.getInput('organization', type === EndpointType.SonarCloud);
     return new Endpoint(type, { url, token, username, password, organization });
   }
 }

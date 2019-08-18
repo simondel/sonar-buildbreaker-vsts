@@ -1,0 +1,1 @@
+The files in this directory are developed by SonarSource.

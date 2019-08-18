@@ -11,9 +11,9 @@
         "Release"
     ],
     "version": {
-        "Major": 1,
+        "Major": 2,
         "Minor": 0,
-        "Patch": 7
+        "Patch": 2
     },
     "instanceNameFormat": "Break build on quality gate failure",
     "groups": [
@@ -30,6 +30,26 @@
             "label": "SonarCloud Service Endpoint",
             "required": true,
             "helpMarkDown": "Select the SonarCloud endpoint for your project. To create one, click the Manage link and create a new SonarCloud Service Endpoint, then enter your SonarCloud account token."
+        },
+        {
+            "name": "organization",
+            "type": "pickList",
+            "label": "Organization",
+            "required": true,
+            "helpMarkDown": "Select the name of your Organization",
+            "properties": {
+              "EditableOptions": "True"
+            }
+        }
+    ],
+    "dataSourceBindings": [
+        {
+          "target": "organization",
+          "endpointId": "$(SonarCloud)",
+          "endpointUrl": "{{endpoint.url}}/api/organizations/search?member=true",
+          "resultSelector": "jsonpath:$.organizations[*]",
+          "resultTemplate":
+            "{ \"Value\" : \"{{{key}}}\", \"DisplayValue\" : \"{{{name}}} ({{{key}}})\" }"
         }
     ],
     "execution": {
