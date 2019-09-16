@@ -4,6 +4,7 @@ import TaskReport from './sonarsource/sonarqube/TaskReport';
 import Metrics from './sonarsource/sonarqube/Metrics';
 import Task, { TimeOutReachedError } from './sonarsource/sonarqube/Task';
 import Analysis from './sonarsource/sonarqube/Analysis';
+import { getServerVersion } from './sonarsource/helpers/request';
 
 let globalQualityGateStatus = '';
 
@@ -11,7 +12,8 @@ export default async function checkQualityGateTask(endpoint: Endpoint) {
   const metrics = await Metrics.getAllMetrics(endpoint);
 
   const timeoutSec = 120;
-  const taskReports = await TaskReport.createTaskReportsFromFiles();
+  const serverVersion = await getServerVersion(endpoint);
+  const taskReports = await TaskReport.createTaskReportsFromFiles(endpoint, serverVersion);
 
   const analyses = await Promise.all(
     taskReports.map(taskReport => getReportForTask(taskReport, metrics, endpoint, timeoutSec))
