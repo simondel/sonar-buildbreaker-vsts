@@ -12,8 +12,8 @@
       ],
     "version": {
         "Major": 8,
-        "Minor": 1,
-        "Patch": 2
+        "Minor": 2,
+        "Patch": 0
     },
     "instanceNameFormat": "Break build on quality gate failure",
     "groups": [
@@ -34,6 +34,10 @@
     ],
     "execution": {
         "Node10": {
+            "target": "dist/task.js",
+            "workingDirectory": "$(currentDirectory)"
+        },
+        "Node16": {
             "target": "dist/task.js",
             "workingDirectory": "$(currentDirectory)"
         }

@@ -4,9 +4,9 @@
   "description": "These tasks help automate bumping version numbers and changing package names at build time.",
   "main": "index.js",
   "scripts": {
-    "postinstall": "cd extensions/sonarcloud/tasks/buildbreaker && npm install && cd ../../../sonarqube/tasks/buildbreaker && npm install",
-    "build": "tsc -p extensions/sonarcloud/tasks/buildbreaker && tsc -p extensions/sonarqube/tasks/buildbreaker",
-    "pack": "tfx extension create --manifest-globs extensions/sonarcloud/vss-extension.json && tfx extension create --manifest-globs extensions/sonarqube/vss-extension.json"
+    "postinstall": "cd extensions/sonarqube/tasks/buildbreaker && npm install",
+    "build": "tsc -p extensions/sonarqube/tasks/buildbreaker",
+    "pack": "tfx extension create --manifest-globs extensions/sonarqube/vss-extension.json"
   },
   "repository": {
     "type": "git",
@@ -19,12 +19,8 @@
   },
   "homepage": "https://github.com/simondel/sonar-buildbreaker-vsts#readme",
   "devDependencies": {
-    "@types/node": "^10.0.6",
-    "@types/request": "^2.47.1",
-    "tfx-cli": "0.7.8",
-    "typescript": "3.5.3"
-  },
-  "dependencies": {
-    "tslint": "^5.11.0"
+    "@types/node": "^16.11.39",
+    "tfx-cli": "0.17.0",
+    "typescript": "5.5.4"
   }
 }

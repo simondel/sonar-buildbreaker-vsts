@@ -47,7 +47,7 @@ export default class TaskReport {
     let taskReportGlob: string;
     let taskReportGlobResult: string[];
 
-    if (endpoint.type === EndpointType.SonarQube && serverVersion < semver.parse('7.2.0')) {
+    if (endpoint.type === EndpointType.SonarQube && semver.satisfies(serverVersion, "<7.2.0")) {
       tl.debug(
         'SonarQube version < 7.2.0 detected, falling back to default location(s) for report-task.txt file.'
       );
@@ -56,14 +56,29 @@ export default class TaskReport {
     } else {
       taskReportGlob = path.join(
         SONAR_TEMP_DIRECTORY_NAME,
-        tl.getVariable('Build.BuildNumber'),
+        tl.getVariable('Build.BuildId'),
         '**',
         REPORT_TASK_NAME
       );
-      taskReportGlobResult = findMatch(tl.getVariable('Agent.TempDirectory'), taskReportGlob);
+      let taskReportPatterns: string[] = [
+        path.join(
+          SONAR_TEMP_DIRECTORY_NAME,
+          tl.getVariable('Build.BuildId'),
+          '**',
+          REPORT_TASK_NAME
+        ),
+        path.join(
+          SONAR_TEMP_DIRECTORY_NAME,
+          tl.getVariable('Build.BuildNumber'),
+          '**',
+          REPORT_TASK_NAME
+        )
+      ]
+      taskReportGlobResult = findMatch(tl.getVariable('Agent.TempDirectory'), taskReportPatterns);
+      tl.debug(`[SQ] Searching for ${taskReportPatterns} - found ${taskReportGlobResult.length} file(s)`);
+
     }
 
-    tl.debug(`[SQ] Searching for ${taskReportGlob} - found ${taskReportGlobResult.length} file(s)`);
     return taskReportGlobResult;
   }
 

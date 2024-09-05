@@ -2,12 +2,12 @@
     "manifestVersion": 1,
     "id": "sonar-buildbreaker",
     "name": "SonarQube build breaker",
-    "version": "8.1.2",
+    "version": "8.2.0",
     "publisher": "SimondeLang",
     "public": true,
     "repository": {
         "type": "git",
-        "uri": "https://github.com/simondel/sonar-buildbreaker-vsts"
+        "uri": "https://sblsats181.dblc2sc.mindef.nl/C2SC/BM/_git/sonar-buildbreaker"
     },
     "targets": [
         {
@@ -34,10 +34,10 @@
     ],
     "links": {
         "repository": {
-            "uri": "https://github.com/simondel/sonar-buildbreaker-vsts"
+            "uri": "https://sblsats181.dblc2sc.mindef.nl/C2SC/BM/_git/sonar-buildbreaker"
         },
         "issues": {
-            "uri": "https://github.com/simondel/sonar-buildbreaker-vsts/issues"
+            "uri": "https://sblsats181.dblc2sc.mindef.nl/C2SC/ELIAS/_boards/board/t/BM/Backlog%20items"
         }
     },
     "branding": {

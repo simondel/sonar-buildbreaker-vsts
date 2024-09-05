@@ -30,7 +30,7 @@ export default class Task {
     delay = 1000
   ): Promise<Task> {
     tl.debug(`[SQ] Waiting for task '${taskId}' to complete.`);
-    return getJSON(endpoint, `/api/ce/task`, { id: taskId }).then(
+    return getJSON(endpoint, `api/ce/task`, { id: taskId }).then(
       ({ task }: { task: ITask }) => {
         tl.debug(`[SQ] Task status:` + task.status);
         if (tries <= 0) {
