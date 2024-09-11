@@ -1,6 +1,6 @@
 {
   "name": "sonarbuildbreaker",
-  "version": "8.1.13",
+  "version": "8.2.0",
   "description": "",
   "main": "index.js",
   "scripts": {
@@ -15,6 +15,6 @@
     "azure-pipelines-task-lib": "^4.10.1"
   },
   "engines": {
-    "node": ">=10"
+    "node": ">=16"
   }
 }

@@ -1,71 +1,71 @@
 {
-    "manifestVersion": 1,
-    "id": "sonar-buildbreaker",
-    "name": "SonarQube build breaker",
-    "version": "8.2.0",
-    "publisher": "SimondeLang",
-    "public": true,
+  "manifestVersion": 1,
+  "id": "sonar-buildbreaker",
+  "name": "SonarQube build breaker",
+  "version": "8.2.0",
+  "publisher": "SimondeLang",
+  "public": true,
+  "repository": {
+    "type": "git",
+    "uri": "https://sblsats181.dblc2sc.mindef.nl/C2SC/BM/_git/sonar-buildbreaker"
+  },
+  "targets": [
+    {
+      "id": "Microsoft.VisualStudio.Services"
+    }
+  ],
+  "description": "Task for breaking your build when it fails the SonarQube quality gate.",
+  "categories": [
+    "Azure Pipelines"
+  ],
+  "content": {
+    "details": {
+      "path": "extensions/sonarqube/README.md"
+    },
+    "license": {
+      "path": "extensions/sonarqube/LICENSE"
+    }
+  },
+  "tags": [
+    "build",
+    "sonar",
+    "sonarqube",
+    "sq"
+  ],
+  "links": {
     "repository": {
-        "type": "git",
-        "uri": "https://sblsats181.dblc2sc.mindef.nl/C2SC/BM/_git/sonar-buildbreaker"
+      "uri": "https://sblsats181.dblc2sc.mindef.nl/C2SC/BM/_git/sonar-buildbreaker"
     },
-    "targets": [
-        {
-            "id": "Microsoft.VisualStudio.Services"
-        }
-    ],
-    "description": "Task for breaking your build when it fails the SonarQube quality gate.",
-    "categories": [
-        "Build and release"
-    ],
-    "content": {
-        "details": {
-            "path": "extensions/sonarqube/README.md"
-        },
-        "license": {
-            "path": "extensions/sonarqube/LICENSE"
-        }
+    "issues": {
+      "uri": "https://sblsats181.dblc2sc.mindef.nl/C2SC/ELIAS/_boards/board/t/BM/Backlog%20items"
+    }
+  },
+  "branding": {
+    "color": "rgb(248,153,56)",
+    "theme": "light"
+  },
+  "icons": {
+    "default": "images/extension-icon.png"
+  },
+  "files": [
+    {
+      "path": "tasks/buildbreaker"
     },
-    "tags": [
-        "build",
-        "sonar",
-        "sonarqube",
-        "sq"
-    ],
-    "links": {
-        "repository": {
-            "uri": "https://sblsats181.dblc2sc.mindef.nl/C2SC/BM/_git/sonar-buildbreaker"
-        },
-        "issues": {
-            "uri": "https://sblsats181.dblc2sc.mindef.nl/C2SC/ELIAS/_boards/board/t/BM/Backlog%20items"
-        }
-    },
-    "branding": {
-        "color": "rgb(248,153,56)",
-        "theme": "light"
-    },
-    "icons": {
-        "default": "images/extension-icon.png"
-    },
-    "files": [
-        {
-            "path": "tasks/buildbreaker"
-        },
-        {
-            "path": "images",
-            "addressable": true
-        }
-    ],
-    "contributions": [
-        {
-            "id": "sonar-buildbreaker",
-            "type": "ms.vss-distributed-task.task",
-            "targets": [
-                "ms.vss-distributed-task.tasks"
-            ],
-            "properties": {
-                "name": "extensions/sonarqube/tasks/buildbreaker"
-            }
-        }
-    ]
+    {
+      "path": "images",
+      "addressable": true
+    }
+  ],
+  "contributions": [
+    {
+      "id": "sonar-buildbreaker",
+      "type": "ms.vss-distributed-task.task",
+      "targets": [
+        "ms.vss-distributed-task.tasks"
+      ],
+      "properties": {
+        "name": "extensions/sonarqube/tasks/buildbreaker"
+      }
+    }
+  ]
 }

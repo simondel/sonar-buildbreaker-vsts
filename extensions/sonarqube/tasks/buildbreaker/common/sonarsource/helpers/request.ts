@@ -1,7 +1,7 @@
 import * as semver from 'semver';
 import * as tl from 'azure-pipelines-task-lib/task';
-import Endpoint from '../sonarqube/Endpoint';
 import * as httpc from 'typed-rest-client/HttpClient';
+import Endpoint from '../sonarqube/Endpoint';
 
 interface RequestData {
   [x: string]: any;

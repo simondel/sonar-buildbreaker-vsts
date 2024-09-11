@@ -44,22 +44,16 @@ export default class TaskReport {
   }
 
   public static findTaskFileReport(endpoint: Endpoint, serverVersion: semver.SemVer): string[] {
-    let taskReportGlob: string;
     let taskReportGlobResult: string[];
 
     if (endpoint.type === EndpointType.SonarQube && semver.satisfies(serverVersion, "<7.2.0")) {
       tl.debug(
         'SonarQube version < 7.2.0 detected, falling back to default location(s) for report-task.txt file.'
       );
-      taskReportGlob = path.join('**', REPORT_TASK_NAME);
+      let taskReportGlob = path.join('**', REPORT_TASK_NAME);
       taskReportGlobResult = findMatch(tl.getVariable('Agent.BuildDirectory'), taskReportGlob);
+      tl.debug(`[SQ] Searching for ${taskReportGlob} - found ${taskReportGlobResult.length} file(s)`);
     } else {
-      taskReportGlob = path.join(
-        SONAR_TEMP_DIRECTORY_NAME,
-        tl.getVariable('Build.BuildId'),
-        '**',
-        REPORT_TASK_NAME
-      );
       let taskReportPatterns: string[] = [
         path.join(
           SONAR_TEMP_DIRECTORY_NAME,
@@ -76,7 +70,6 @@ export default class TaskReport {
       ]
       taskReportGlobResult = findMatch(tl.getVariable('Agent.TempDirectory'), taskReportPatterns);
       tl.debug(`[SQ] Searching for ${taskReportPatterns} - found ${taskReportGlobResult.length} file(s)`);
-
     }
 
     return taskReportGlobResult;
@@ -93,7 +86,7 @@ export default class TaskReport {
           return Promise.reject(
             TaskReport.throwInvalidReport(
               `[SQ] Could not find '${REPORT_TASK_NAME}'.` +
-                ` Possible cause: the analysis did not complete successfully.`
+              ` Possible cause: the analysis did not complete successfully.`
             )
           );
         }

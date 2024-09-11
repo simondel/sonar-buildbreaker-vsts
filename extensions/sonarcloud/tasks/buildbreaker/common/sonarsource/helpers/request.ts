@@ -1,6 +1,6 @@
-import * as request from 'request';
 import * as semver from 'semver';
 import * as tl from 'azure-pipelines-task-lib/task';
+import * as httpc from 'typed-rest-client/HttpClient';
 import Endpoint from '../sonarqube/Endpoint';
 
 interface RequestData {
@@ -8,47 +8,40 @@ interface RequestData {
 }
 
 function get(endpoint: Endpoint, path: string, isJson: boolean, query?: RequestData): Promise<any> {
-  tl.debug(`[SQ] API GET: '${path}' with query "${JSON.stringify(query)}"`);
-  return new Promise((resolve, reject) => {
-    const options: request.CoreOptions = {
-      auth: endpoint.auth
-    };
-    if (query) {
-      options.qs = query;
-      options.useQuerystring = true;
-    }
-    request.get(
-      {
-        method: 'GET',
-        baseUrl: endpoint.url,
-        uri: path,
-        json: isJson,
-        ...options
-      },
-      (error, response, body) => {
-        if (error) {
-          return logAndReject(
-            reject,
-            `[SQ] API GET '${path}' failed, error was: ${JSON.stringify(error)}`
-          );
-        }
-        tl.debug(
-          `Response: ${response.statusCode} Body: "${isString(body) ? body : JSON.stringify(body)}"`
-        );
-        if (response.statusCode < 200 || response.statusCode >= 300) {
-          return logAndReject(
-            reject,
-            `[SQ] API GET '${path}' failed, status code was: ${response.statusCode}`
-          );
-        }
-        return resolve(body || (isJson ? {} : ''));
-      }
-    );
-  });
-}
+  let queryString: string = "";
+  if (query) {
+    queryString = "?" + serialize(query);
+  }
 
-function isString(x) {
-  return Object.prototype.toString.call(x) === '[object String]';
+  var promise = new Promise<any>((resolve, reject) => {
+    let httpClient: httpc.HttpClient = new httpc.HttpClient('Sonarqube-buildbreaker-task', [], {
+      headers: {
+        "Authorization": "Basic " + btoa(`${endpoint.auth.user}:`)
+      }
+    });
+    let url: string = `${endpoint.url}${path}${queryString}`;
+    tl.debug(`[SQ] API GET: '${url}'`);
+    httpClient.get(url).then((res) => {
+      if (res.message.statusCode < 200 || res.message.statusCode >= 300) {
+        return logAndReject(
+          reject,
+          `[SQ] API GET '${url}' failed, status code was: ${res.message.statusCode}`
+        );
+      }
+      res.readBody().then((body) => {
+        let response = isJson ? JSsON.parse(body) : body;
+        resolve(response);
+      });
+    }).catch((error) => {
+      return logAndReject(
+        reject,
+        `[SQ] API GET '${path}' failed with error: ${error}}`
+      );
+
+    });
+  });
+
+  return promise;
 }
 
 export function getJSON(endpoint: Endpoint, path: string, query?: RequestData): Promise<any> {
@@ -57,6 +50,15 @@ export function getJSON(endpoint: Endpoint, path: string, query?: RequestData): 
 
 export function getServerVersion(endpoint: Endpoint): Promise<semver.SemVer> {
   return get(endpoint, '/api/server/version', false).then(semver.coerce);
+}
+
+function serialize(obj) {
+  var str = [];
+  for (var p in obj)
+    if (obj.hasOwnProperty(p)) {
+      str.push(encodeURIComponent(p) + "=" + encodeURIComponent(obj[p]));
+    }
+  return str.join("&");
 }
 
 function logAndReject(reject, errMsg) {
