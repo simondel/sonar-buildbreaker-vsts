@@ -1,6 +1,6 @@
 {
   "name": "sonar-buildbreaker-vsts",
-  "version": "1.0.0",
+  "version": "8.2.0",
   "description": "These tasks help automate bumping version numbers and changing package names at build time.",
   "main": "index.js",
   "scripts": {
@@ -15,16 +15,12 @@
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/simondel/sonar-buildbreaker-vsts/issues"
+    "url": "https://github.com/mcvermeulen/sonar-buildbreaker-vsts/issues"
   },
-  "homepage": "https://github.com/simondel/sonar-buildbreaker-vsts#readme",
+  "homepage": "https://github.com/mcvermeulen/sonar-buildbreaker-vsts#readme",
   "devDependencies": {
-    "@types/node": "^10.0.6",
-    "@types/request": "^2.47.1",
-    "tfx-cli": "0.7.8",
-    "typescript": "3.5.3"
-  },
-  "dependencies": {
-    "tslint": "^5.11.0"
+    "@types/node": "^16.11.39",
+    "tfx-cli": "0.17.0",
+    "typescript": "5.5.4"
   }
 }

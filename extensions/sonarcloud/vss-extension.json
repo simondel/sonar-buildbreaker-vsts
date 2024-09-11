@@ -1,70 +1,70 @@
 {
-    "manifestVersion": 1,
-    "id": "sonarcloud-buildbreaker",
-    "name": "SonarCloud build breaker",
-    "version": "2.1.2",
-    "publisher": "SimondeLang",
-    "public": true,
+  "manifestVersion": 1,
+  "id": "sonarcloud-buildbreaker",
+  "name": "SonarCloud build breaker",
+  "version": "2.1.2",
+  "publisher": "SimondeLang",
+  "public": true,
+  "repository": {
+    "type": "git",
+    "uri": "https://github.com/simondel/sonar-buildbreaker-vsts"
+  },
+  "targets": [
+    {
+      "id": "Microsoft.VisualStudio.Services"
+    }
+  ],
+  "description": "Task for breaking your build when it fails the SonarCloud quality gate.",
+  "categories": [
+    "Azure Pipelines"
+  ],
+  "content": {
+    "details": {
+      "path": "extensions/sonarcloud/README.md"
+    },
+    "license": {
+      "path": "extensions/sonarcloud/LICENSE"
+    }
+  },
+  "tags": [
+    "build",
+    "sonar",
+    "sonarcloud"
+  ],
+  "links": {
     "repository": {
-        "type": "git",
-        "uri": "https://github.com/simondel/sonar-buildbreaker-vsts"
+      "uri": "https://github.com/simondel/sonar-buildbreaker-vsts"
     },
-    "targets": [
-        {
-            "id": "Microsoft.VisualStudio.Services"
-        }
-    ],
-    "description": "Task for breaking your build when it fails the SonarCloud quality gate.",
-    "categories": [
-        "Build and release"
-    ],
-    "content": {
-        "details": {
-            "path": "extensions/sonarcloud/README.md"
-        },
-        "license": {
-            "path": "extensions/sonarcloud/LICENSE"
-        }
+    "issues": {
+      "uri": "https://github.com/simondel/sonar-buildbreaker-vsts/issues"
+    }
+  },
+  "branding": {
+    "color": "rgb(248,153,56)",
+    "theme": "light"
+  },
+  "icons": {
+    "default": "images/extension-icon.png"
+  },
+  "files": [
+    {
+      "path": "tasks/buildbreaker"
     },
-    "tags": [
-        "build",
-        "sonar",
-        "sonarcloud"
-    ],
-    "links": {
-        "repository": {
-            "uri": "https://github.com/simondel/sonar-buildbreaker-vsts"
-        },
-        "issues": {
-            "uri": "https://github.com/simondel/sonar-buildbreaker-vsts/issues"
-        }
-    },
-    "branding": {
-        "color": "rgb(248,153,56)",
-        "theme": "light"
-    },
-    "icons": {
-        "default": "images/extension-icon.png"
-    },
-    "files": [
-        {
-            "path": "tasks/buildbreaker"
-        },
-        {
-            "path": "images",
-            "addressable": true
-        }
-    ],
-    "contributions": [
-        {
-            "id": "sonar-buildbreaker",
-            "type": "ms.vss-distributed-task.task",
-            "targets": [
-                "ms.vss-distributed-task.tasks"
-            ],
-            "properties": {
-                "name": "extensions/sonarcloud/tasks/buildbreaker"
-            }
-        }
-    ]
+    {
+      "path": "images",
+      "addressable": true
+    }
+  ],
+  "contributions": [
+    {
+      "id": "sonar-buildbreaker",
+      "type": "ms.vss-distributed-task.task",
+      "targets": [
+        "ms.vss-distributed-task.tasks"
+      ],
+      "properties": {
+        "name": "extensions/sonarcloud/tasks/buildbreaker"
+      }
+    }
+  ]
 }
