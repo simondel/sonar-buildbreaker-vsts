@@ -10,11 +10,12 @@
   "author": "",
   "license": "Apache-2.0",
   "dependencies": {
-    "fs-extra": "10.0.0",
-    "request": "^2.87.0",
+    "axios": "^1.6.0",
+    "fs-extra": "11.2.0",
+    "semver": "^7.5.4",
     "azure-pipelines-task-lib": "^3.1.9"
   },
   "engines": {
-    "node": ">=10"
+    "node": ">=20"
   }
 }

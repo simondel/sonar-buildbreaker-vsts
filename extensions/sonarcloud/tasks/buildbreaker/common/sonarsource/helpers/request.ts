@@ -1,4 +1,4 @@
-import * as request from 'request';
+import axios, { AxiosBasicCredentials } from 'axios';
 import * as semver from 'semver';
 import * as tl from 'azure-pipelines-task-lib/task';
 import Endpoint from '../sonarqube/Endpoint';
@@ -10,40 +10,42 @@ interface RequestData {
 function get(endpoint: Endpoint, path: string, isJson: boolean, query?: RequestData): Promise<any> {
   tl.debug(`[SQ] API GET: '${path}' with query "${JSON.stringify(query)}"`);
   return new Promise((resolve, reject) => {
-    const options: request.CoreOptions = {
-      auth: endpoint.auth
-    };
-    if (query) {
-      options.qs = query;
-      options.useQuerystring = true;
+    const auth = endpoint.auth;
+    let axiosAuth: AxiosBasicCredentials | undefined;
+
+    // Convert endpoint.auth to axios basic auth format
+    if (auth.user && auth.pass) {
+      axiosAuth = { username: auth.user, password: auth.pass };
+    } else if (auth.user) {
+      // Token-based auth: use token as username without password
+      axiosAuth = { username: auth.user, password: '' };
     }
-    request.get(
-      {
-        method: 'GET',
-        baseUrl: endpoint.url,
-        uri: path,
-        json: isJson,
-        ...options
-      },
-      (error, response, body) => {
-        if (error) {
-          return logAndReject(
-            reject,
-            `[SQ] API GET '${path}' failed, error was: ${JSON.stringify(error)}`
-          );
-        }
+
+    axios
+      .get(endpoint.url + path, {
+        params: query,
+        responseType: isJson ? 'json' : 'text',
+        auth: axiosAuth,
+        validateStatus: () => true // Don't throw on any status code, we'll handle manually
+      })
+      .then((response) => {
         tl.debug(
-          `Response: ${response.statusCode} Body: "${isString(body) ? body : JSON.stringify(body)}"`
+          `Response: ${response.status} Body: "${isString(response.data) ? response.data : JSON.stringify(response.data)}"`
         );
-        if (response.statusCode < 200 || response.statusCode >= 300) {
+        if (response.status < 200 || response.status >= 300) {
           return logAndReject(
             reject,
-            `[SQ] API GET '${path}' failed, status code was: ${response.statusCode}`
+            `[SQ] API GET '${path}' failed, status code was: ${response.status}`
           );
         }
-        return resolve(body || (isJson ? {} : ''));
-      }
-    );
+        return resolve(response.data || (isJson ? {} : ''));
+      })
+      .catch((error) => {
+        return logAndReject(
+          reject,
+          `[SQ] API GET '${path}' failed, error was: ${JSON.stringify(error.message)}`
+        );
+      });
   });
 }
 
