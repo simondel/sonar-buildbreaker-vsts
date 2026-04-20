@@ -56,7 +56,7 @@ export default class TaskReport {
     } else {
       taskReportGlob = path.join(
         SONAR_TEMP_DIRECTORY_NAME,
-        tl.getVariable('Build.BuildNumber'),
+        tl.getVariable('Build.BuildId'),
         '**',
         REPORT_TASK_NAME
       );
